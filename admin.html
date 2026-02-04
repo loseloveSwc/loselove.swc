@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel</title>
+<style>
+body {
+    background:#111;
+    color:white;
+    font-family: 'Prompt', sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.panel {
+    background:#1a1a1a;
+    border:2px solid #E63946;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    width:300px;
+    box-shadow:0 0 30px rgba(230,57,70,0.5);
+}
+
+input {
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    margin-bottom:15px;
+}
+
+button {
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    font-weight:800;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+.open { background:#E63946; color:white; }
+.close { background:#444; color:white; }
+
+.status {
+    margin-top:15px;
+    font-weight:800;
+}
+</style>
+</head>
+<body>
+
+<div class="panel">
+    <h2>🔐 หลังบ้านพรรค</h2>
+    <input type="password" id="password" placeholder="รหัสผ่าน">
+    <button class="open" onclick="openPolicy()">เปิดเผยนโยบาย</button>
+    <button class="close" onclick="closePolicy()">ปิดนโยบาย</button>
+    <div class="status" id="status"></div>
+</div>
+
+<script>
+const PASSWORD_HASH = "cdedc82bd0b980cb28b0877209adc17fd235d43946e2b64aca941643bdd6077c"; // ตัวอย่าง
+
+async function hash(text) {
+    const msgBuffer = new TextEncoder().encode(text);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    return Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function openPolicy() {
+    const pass = document.getElementById("password").value;
+    const hashed = await hash(pass);
+
+    if (hashed !== PASSWORD_HASH) {
+        alert("รหัสไม่ถูกต้อง");
+        return;
+    }
+
+    localStorage.setItem("policyOpen", "true");
+    document.getElementById("status").innerText = "✅ เปิดเผยนโยบายแล้ว";
+}
+
+function closePolicy() {
+    localStorage.removeItem("policyOpen"); // ⭐ สำคัญ
+    document.getElementById("status").innerText = "❌ ปิดนโยบายแล้ว";
+    document.getElementById("password").value = "";
+}
+</script>
+
+
+</body>
+</html>
