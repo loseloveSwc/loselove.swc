@@ -1,6 +1,5 @@
 
 const SITE_CONFIG = {
-    isPolicyOpen: false, 
 
     //รู้จักพรรค
     aboutUs: {
@@ -17,11 +16,41 @@ const SITE_CONFIG = {
     ],
 
     //นโยบาย
-    policyDetail: `
-        <div style="text-align: left; background: rgba(0,0,0,0.3); padding: 25px; border-radius: 15px; border: 1px dashed var(--red);">
-            <p style="margin-bottom: 15px;"><i class="fa-solid fa-circle-check" style="color:var(--red)"></i> 1. ไม่รู้</p>
-            <p style="margin-bottom: 15px;"><i class="fa-solid fa-circle-check" style="color:var(--red)"></i> 2. ไม่ทราบ</p>
-            <p style="text-align: center; margin-top: 20px; font-weight: 800; color: var(--red);">"ผมไม่รู้"</p>
-        </div>
-    `
+    policies: [
+          {
+    id: "01",
+    title: "สนับสนุนกีฬาที่หลากหลายมากขึ้น",
+    desc: "ส่งเสริมกิจกรรมกีฬาอย่างหลากหลาย เปิดโอกาสให้นักเรียนทุกคนได้แสดงศักยภาพด้านกีฬาอย่างเท่าเทียม",
+    icon: "fa-futbol",
+    color: "#2ECC71"
+  },
+  {
+    id: "02",
+    title: "กล้าแสดงออก สร้างสรรค์อย่างเหมาะสม",
+    desc: "สนับสนุนให้นักเรียนมีความกล้าแสดงออก มีความคิดริเริ่ม และใช้ความคิดสร้างสรรค์ในทางที่เหมาะสม",
+    icon: "fa-lightbulb",
+    color: "#F1C40F"
+  },
+  {
+    id: "03",
+    title: "ขยะแลกแต้มจิตอาสา",
+    desc: "นำขยะรีไซเคิลมาแลกเป็นแต้มจิตอาสา ปลูกฝังจิตสำนึกด้านสิ่งแวดล้อมและความรับผิดชอบต่อสังคม",
+    icon: "fa-recycle",
+    color: "#27AE60"
+  },
+  {
+    id: "04",
+    title: "จัดตั้งตลาดนัดสร้างรายได้",
+    desc: "เปิดพื้นที่ตลาดนัดให้นักเรียนได้ฝึกอาชีพ สร้างรายได้ และเรียนรู้การบริหารจัดการทางการเงิน",
+    icon: "fa-store",
+    color: "#E67E22"
+  },
+  {
+    id: "05",
+    title: "จัดตั้งชมรมเสมารักษ์",
+    desc: "สร้างชมรมเพื่อดูแล ช่วยเหลือ และปกป้องสิทธิของนักเรียน ให้โรงเรียนเป็นพื้นที่ปลอดภัยสำหรับทุกคน",
+    icon: "fa-shield-heart",
+    color: "#E74C3C"
+  }
+    ]
 };
