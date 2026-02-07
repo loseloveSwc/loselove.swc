@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE STRATEGY | LOSELOVE #3</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;600;900&family=Chakra+Petch:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root{
+    --red:#E63946;
+    --bg:#050505;
+}
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:var(--bg);
+    color:#fff;
+    font-family:'Prompt',sans-serif;
+    overflow-x:hidden;
+}
+
+/* ===== BACKGROUND ===== */
+.bg-grid{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size:40px 40px;
+}
+.bg-glow{
+    position:fixed;
+    inset:-40%;
+    background:
+        radial-gradient(circle at top left, rgba(230,57,70,.12), transparent 40%),
+        radial-gradient(circle at bottom right, rgba(76,201,240,.1), transparent 45%);
+    z-index:-3;
+}
+
+/* ===== BACK BUTTON ===== */
+.back-btn{
+    position:fixed;
+    top:22px;
+    left:22px;
+    z-index:50;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 18px;
+    border-radius:999px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.15);
+    color:#fff;
+    text-decoration:none;
+    font-size:.95rem;
+    letter-spacing:1px;
+    transition:.3s ease;
+    backdrop-filter:blur(6px);
+}
+.back-btn i{
+    color:var(--red);
+}
+.back-btn:hover{
+    background:rgba(230,57,70,.15);
+    border-color:var(--red);
+    box-shadow:0 0 22px -8px var(--red);
+    transform:translateX(-4px);
+}
+
+/* ===== LAYOUT ===== */
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:90px 20px 60px;
+}
+
+/* ===== HEADER ===== */
+.header{
+    margin-bottom:60px;
+    border-left:4px solid var(--red);
+    padding-left:22px;
+}
+.header h1{
+    font-family:'Chakra Petch';
+    font-size:3rem;
+    margin:0;
+}
+.header h1 span{color:var(--red)}
+.header p{
+    margin-top:8px;
+    opacity:.45;
+    letter-spacing:3px;
+}
+
+/* ===== GRID ===== */
+.policy-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:30px;
+}
+
+/* ===== CARD ===== */
+.card{
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:28px;
+    padding:44px;
+    position:relative;
+    transition:.4s ease;
+    opacity:0;
+    transform:translateY(20px);
+}
+.card.show{
+    opacity:1;
+    transform:translateY(0);
+}
+.card:hover{
+    transform:translateY(-12px);
+    border-color:var(--c);
+    box-shadow:0 16px 40px -16px var(--c);
+}
+
+/* glow edge */
+.card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+    pointer-events:none;
+    box-shadow:0 0 0 0 var(--c);
+    opacity:0;
+    transition:.35s;
+}
+.card:hover::after{
+    opacity:1;
+    box-shadow:0 0 28px -12px var(--c);
+}
+
+.icon-box{
+    font-size:3.1rem;
+    color:var(--c);
+    margin-bottom:22px;
+}
+.card h2{
+    font-size:1.55rem;
+    margin-bottom:12px;
+}
+.card p{
+    opacity:.72;
+    font-weight:300;
+    line-height:1.65;
+}
+
+/* ===== LOCK ===== */
+#lock-screen{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.94);
+    backdrop-filter:blur(8px);
+    z-index:1000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+#lock-screen h2{
+    font-family:'Chakra Petch';
+    color:var(--red);
+    letter-spacing:4px;
+}
+#lock-screen p{
+    margin-top:12px;
+    opacity:.45;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg-glow"></div>
+<div class="bg-grid"></div>
+
+<a href="index.html" class="back-btn">
+    <i class="fa-solid fa-arrow-left"></i>
+    กลับหน้าหลัก
+</a>
+
+<div id="lock-screen">
+    <div>
+        <h2>[ ขออภัยในความไม่สะดวก ]</h2>
+        <p>ขณะนี้ยังไม่สามารถเปิดเผยนโยบายได้</p>
+    </div>
+</div>
+
+<div class="container">
+    <header class="header">
+        <h1>นโยบาย <span>ของเรา</span></h1>
+        <p>NO 03 | LOSTLOVE SWC</p>
+    </header>
+
+    <div class="policy-grid" id="mainDisplay"></div>
+</div>
+
+<script src="config.js"></script>
+<script>
+const display = document.getElementById("mainDisplay");
+const lock = document.getElementById("lock-screen");
+let rendered = false;
+
+function isOpen(){
+    return localStorage.getItem("policyOpen") === "true";
+}
+function getPolicies(){
+    return (typeof SITE_CONFIG !== "undefined" && SITE_CONFIG.policies)
+        ? SITE_CONFIG.policies
+        : [];
+}
+function render(){
+    if(!isOpen()){
+        lock.style.display = "flex";
+        display.innerHTML = "";
+        rendered = false;
+        return;
+    }
+    lock.style.display = "none";
+    if(rendered) return;
+
+    const data = getPolicies();
+    display.innerHTML = data.map(p => `
+        <div class="card" style="--c:${p.color}">
+            <div class="icon-box"><i class="fa-solid ${p.icon}"></i></div>
+            <h2>${p.title}</h2>
+            <p>${p.desc}</p>
+        </div>
+    `).join("");
+
+    document.querySelectorAll(".card").forEach((c,i)=>{
+        setTimeout(()=>c.classList.add("show"), i*140);
+    });
+
+    rendered = true;
+}
+
+render();
+window.addEventListener("storage",e=>{
+    if(e.key==="policyOpen") render();
+});
+</script>
+
+</body>
+</html>
