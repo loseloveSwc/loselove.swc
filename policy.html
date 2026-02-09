@@ -190,13 +190,6 @@ body{
     กลับหน้าหลัก
 </a>
 
-<div id="lock-screen">
-    <div>
-        <h2>[ ขออภัยในความไม่สะดวก ]</h2>
-        <p>ขณะนี้ยังไม่สามารถเปิดเผยนโยบายได้</p>
-    </div>
-</div>
-
 <div class="container">
     <header class="header">
         <h1>นโยบาย <span>ของเรา</span></h1>
@@ -209,47 +202,32 @@ body{
 <script src="config.js"></script>
 <script>
 const display = document.getElementById("mainDisplay");
-const lock = document.getElementById("lock-screen");
-let rendered = false;
 
-function isOpen(){
-    return localStorage.getItem("policyOpen") === "true";
-}
 function getPolicies(){
     return (typeof SITE_CONFIG !== "undefined" && SITE_CONFIG.policies)
         ? SITE_CONFIG.policies
         : [];
 }
-function render(){
-    if(!isOpen()){
-        lock.style.display = "flex";
-        display.innerHTML = "";
-        rendered = false;
-        return;
-    }
-    lock.style.display = "none";
-    if(rendered) return;
 
+function render(){
     const data = getPolicies();
+
     display.innerHTML = data.map(p => `
         <div class="card" style="--c:${p.color}">
-            <div class="icon-box"><i class="fa-solid ${p.icon}"></i></div>
+            <div class="icon-box">
+                <i class="fa-solid ${p.icon}"></i>
+            </div>
             <h2>${p.title}</h2>
             <p>${p.desc}</p>
         </div>
     `).join("");
 
-    document.querySelectorAll(".card").forEach((c,i)=>{
-        setTimeout(()=>c.classList.add("show"), i*140);
+    document.querySelectorAll(".card").forEach((c, i) => {
+        setTimeout(() => c.classList.add("show"), i * 140);
     });
-
-    rendered = true;
 }
 
 render();
-window.addEventListener("storage",e=>{
-    if(e.key==="policyOpen") render();
-});
 </script>
 
 </body>
